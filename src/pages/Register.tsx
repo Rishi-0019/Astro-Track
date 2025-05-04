@@ -7,10 +7,13 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { auth } from '../utils/firebase';
-import './Login.css'; // Use the same CSS for consistent styling
+import { db } from '../utils/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { generateUsername } from '../utils/generateUsername';
+import './Login.css';
 
 const Register: React.FC = () => {
-  const [name, setName] = useState(''); // 👈 Name field added
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,9 +30,21 @@ const Register: React.FC = () => {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await updateProfile(userCredential.user, {
-        displayName: name // 👈 Save the name to Firebase Auth
+      const user = userCredential.user;
+
+      await updateProfile(user, { displayName: name });
+
+      const username = generateUsername();
+
+      // Save user details to Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: name,
+        username,
+        createdAt: new Date().toISOString(),
       });
+
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.message);
@@ -38,7 +53,20 @@ const Register: React.FC = () => {
 
   const handleGoogleSignUp = async () => {
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Only save to Firestore if it's a new user
+      const username = generateUsername();
+
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        username,
+        createdAt: new Date().toISOString(),
+      });
+
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.message);

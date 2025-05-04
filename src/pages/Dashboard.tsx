@@ -60,13 +60,12 @@ const Dashboard: React.FC = () => {
 
   const globeEl = useRef<any>();
 
+  // Set up initial fetching of satellite data and news
   useEffect(() => {
     getSatellites();
     getSpaceNews();
-    const clock = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
-    return () => clearInterval(clock);
+    const clock = setInterval(() => setCurrentTime(new Date().toLocaleTimeString()), 1000);
+    return () => clearInterval(clock); // Clean up interval on unmount
   }, []);
 
   const getSatellites = async () => {
@@ -74,22 +73,23 @@ const Dashboard: React.FC = () => {
       setLoading((prev) => ({ ...prev, satellites: true }));
       const data = await fetchSatellites(28.6139, 77.2090, 0.1);
       setSatellites(data.above || []);
-    } catch {
+    } catch (err) {
       setError('Failed to fetch satellites.');
     } finally {
       setLoading((prev) => ({ ...prev, satellites: false }));
     }
   };
 
+  // Haversine formula for distance calculation
   const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371;
+    const R = 6371; // Radius of Earth in km
     const toRad = (deg: number) => deg * (Math.PI / 180);
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
       Math.sin(dLat / 2) ** 2 +
       Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); // Return distance in km
   };
 
   const getLocationName = async (lat: number, lng: number): Promise<string> => {
@@ -118,8 +118,8 @@ const Dashboard: React.FC = () => {
       const locationName = await getLocationName(pos.satlatitude, pos.satlongitude);
       const speed =
         last?.lastTimestamp && now - last.lastTimestamp > 0
-          ? haversineDistance(last.latitude, last.longitude, pos.satlatitude, pos.satlongitude) / 
-            ((now - last.lastTimestamp) / 3600000)
+          ? haversineDistance(last.latitude, last.longitude, pos.satlatitude, pos.satlongitude) /
+            ((now - last.lastTimestamp) / 3600000) // Calculate speed in km/h
           : 0;
 
       positions.push({
@@ -130,7 +130,7 @@ const Dashboard: React.FC = () => {
         altitude: pos.sataltitude,
         locationName,
         speed,
-        purpose: "Weather Monitoring", // This can be updated with real data
+        purpose: "Weather Monitoring", // Placeholder; can be updated later
         lastLat: pos.satlatitude,
         lastLng: pos.satlongitude,
         lastTimestamp: now,
@@ -143,12 +143,15 @@ const Dashboard: React.FC = () => {
 
   const handleSatelliteChange = (options: any) => {
     const selected = options ? options.map((o: any) => ({ satid: o.value, satname: o.label })) : [];
-    setSelectedSatellites(selected.slice(0, 5));
+    setSelectedSatellites(selected.slice(0, 5)); // Limit to 5 selected satellites
   };
 
   const handleTrackSatellites = () => {
-    if (selectedSatellites.length && captchaToken) getSatellitePositions();
-    else setError('Please select satellites and complete captcha.');
+    if (selectedSatellites.length && captchaToken) {
+      getSatellitePositions();
+    } else {
+      setError('Please select satellites and complete captcha.');
+    }
   };
 
   const handleLogout = async () => {
@@ -161,8 +164,8 @@ const Dashboard: React.FC = () => {
       const res = await fetch('https://api.spaceflightnewsapi.net/api/v1/articles');
       const data = await res.json();
       setNews(data || []);
-    } catch {
-      console.error('News fetch failed');
+    } catch (err) {
+      console.error('News fetch failed', err);
     }
   };
 
@@ -232,7 +235,7 @@ const Dashboard: React.FC = () => {
                 <p>Alt: {sat.altitude.toFixed(2)} km</p>
                 <p>Location: {sat.locationName}</p>
                 <p>Speed: {sat.speed.toFixed(2)} km/h</p>
-                <p>Purpose: {sat.purpose}</p> {/* Added purpose */}
+                <p>Purpose: {sat.purpose}</p> {/* Purpose added */}
               </div>
             ))}
           </div>

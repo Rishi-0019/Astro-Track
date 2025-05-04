@@ -1,49 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { sendMessageToChat, fetchMessagesFromChat } from '../firebase'; // Import your Firebase functions
+import { auth } from '../utils/firebase';
+import { database } from '../utils/firebase';  // Assuming Firebase Database is initialized
+import { ref, set, push, onValue } from 'firebase/database';
+import { FaUserCircle } from 'react-icons/fa';
 
-const ChatForum = () => {
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<any[]>([]);
-  const [userId] = useState('user123');  // Replace with actual user ID from Firebase Auth
+interface Message {
+  userId: string;
+  username: string;
+  content: string;
+  timestamp: number;
+}
 
-  // Fetch messages in real-time from Firebase Realtime Database
+const ChatForum: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+
   useEffect(() => {
-    const unsubscribe = fetchMessagesFromChat(setMessages);  // Fetch messages and update state
-    return () => unsubscribe();  // Clean up the listener when component unmounts
+    // Fetch the user UID from Firebase Authentication
+    const user = auth.currentUser;
+    if (user) {
+      setUserId(user.uid);
+      setUsername(user.displayName || 'User'); // Optionally set username
+    }
+
+    // Listen to real-time updates for messages
+    const messagesRef = ref(database, 'messages');
+    onValue(messagesRef, (snapshot) => {
+      const data = snapshot.val();
+      const loadedMessages: Message[] = [];
+      for (let id in data) {
+        loadedMessages.push(data[id]);
+      }
+      setMessages(loadedMessages);
+    });
   }, []);
 
-  // Handle message input change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(e.target.value);
-  };
-
-  // Send message when the user clicks the Send button
-  const handleSend = async () => {
-    if (message.trim() !== '') {
-      await sendMessageToChat(message, userId);  // Send message to Firebase Realtime Database
-      setMessage('');  // Clear input field
+  const handleSendMessage = async () => {
+    if (message.trim()) {
+      const messagesRef = ref(database, 'messages');
+      const newMessageRef = push(messagesRef);
+      await set(newMessageRef, {
+        userId,
+        username,
+        content: message,
+        timestamp: Date.now(),
+      });
+      setMessage('');
     }
   };
 
   return (
-    <div className="chat-forum">
+    <div className="chat-forum-container">
+      <div className="chat-header">
+        <FaUserCircle />
+        <span>{username}</span>
+      </div>
       <div className="chat-messages">
-        {messages.map((msg, index) => (
-          <div key={index} className="chat-message">
-            <div className="message">{msg.message}</div>
-            <div className="timestamp">{new Date(msg.timestamp).toLocaleTimeString()}</div>
+        {messages.map((msg, idx) => (
+          <div key={idx} className="message">
+            <strong>{msg.username}</strong>: {msg.content}
           </div>
         ))}
       </div>
-      
       <div className="chat-input">
         <input
           type="text"
           value={message}
-          onChange={handleChange}
-          placeholder="Type a message..."
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Type your message"
         />
-        <button onClick={handleSend}>Send</button>
+        <button onClick={handleSendMessage}>Send</button>
       </div>
     </div>
   );
