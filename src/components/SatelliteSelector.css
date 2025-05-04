@@ -1,0 +1,71 @@
+/* Search Bar */
+.search-bar {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #00e5ff;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    outline: none;
+  }
+  
+  .search-bar:focus {
+    background: rgba(0, 188, 212, 0.2);
+  }
+  
+  /* Satellite List */
+  .satellite-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  
+  .satellite-item {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 188, 212, 0.4);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .satellite-item:hover {
+    background: rgba(0, 188, 212, 0.2);
+    transform: scale(1.05);
+    color: #ffffff;
+  }
+  
+  /* Selected Satellites */
+  .selected-satellites {
+    margin-top: 20px;
+  }
+  
+  .satellite-card {
+    background: linear-gradient(145deg, #0d1b2a, #132a3c);
+    padding: 12px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 12px rgba(0, 188, 212, 0.2);
+    transition: transform 0.3s ease;
+  }
+  
+  .satellite-card:hover {
+    transform: translateY(-8px);
+  }
+  
+  .remove-btn {
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .remove-btn:hover {
+    background-color: #e53e36;
+  }
+  

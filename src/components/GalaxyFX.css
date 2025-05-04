@@ -1,0 +1,18 @@
+.galaxy-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nebula {
+  position: absolute;
+  width: 300%;
+  height: 300%;
+  top: -100%;
+  left: -100%;
+  background: radial-gradient(circle, rgba(150, 0, 255, 0.02) 0%, transparent 80%);
+  animation: floatNebula 60s ease-in-out infinite;
+}

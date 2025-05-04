@@ -1,0 +1,34 @@
+/* components/MeteorFX.css */
+
+.meteor-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -8;
+}
+
+.meteor {
+  position: absolute;
+  width: 3px;
+  height: 80px;
+  background: linear-gradient(45deg, #fff, transparent);
+  transform: rotate(45deg);
+  animation: meteor-fall 4s linear infinite;
+}
+
+@keyframes meteor-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px) translateX(0);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) translateX(200px);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,111 @@
+/* Use the same styles for both login and register page */
+.login-container, .register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: url('path-to-your-background-image') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+.login-heading, .register-heading {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-form, .register-form {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  font-size: 16px;
+}
+
+.login-btn, .register-btn {
+  padding: 12px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-btn:hover, .register-btn:hover {
+  background-color: #357ae8;
+}
+
+.login-btn:active, .register-btn:active {
+  background-color: #3367d6;
+}
+
+.separator {
+  margin: 20px 0;
+  text-align: center;
+  font-size: 16px;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 12px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.google-btn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.google-btn:hover {
+  background-color: #357ae8;
+}
+
+.google-btn:active {
+  background-color: #3367d6;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.hint {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.hint a {
+  color: #4285f4;
+  text-decoration: none;
+}
+
+.hint a:hover {
+  text-decoration: underline;
+}
