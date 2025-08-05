@@ -3,8 +3,13 @@ import cors from 'cors';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -16,8 +21,7 @@ app.use(express.json());
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Your existing API routes
-
+// API route to get satellites above a location
 app.get('/api/satellites', async (req, res) => {
   const { lat, lng, alt } = req.query;
 
@@ -26,7 +30,7 @@ app.get('/api/satellites', async (req, res) => {
   }
 
   try {
-    const url = `https://api.n2yo.com/rest/v1/satellite/above/${lat}/${lng}/${alt}/70/0/&apiKey=${API_KEY}`;
+    const url = `https://api.n2yo.com/rest/v1/satellite/above/${lat}/${lng}/${alt}/70/0/?apiKey=${API_KEY}`;
     const response = await fetch(url);
     const data = await response.json();
 
@@ -41,6 +45,7 @@ app.get('/api/satellites', async (req, res) => {
   }
 });
 
+// API route to get satellite position
 app.get('/api/position/:satid', async (req, res) => {
   const { satid } = req.params;
   const { lat, lng, alt } = req.query;
@@ -50,7 +55,7 @@ app.get('/api/position/:satid', async (req, res) => {
   }
 
   try {
-    const url = `https://api.n2yo.com/rest/v1/satellite/positions/${satid}/${lat}/${lng}/${alt}/1/&apiKey=${API_KEY}`;
+    const url = `https://api.n2yo.com/rest/v1/satellite/positions/${satid}/${lat}/${lng}/${alt}/1/?apiKey=${API_KEY}`;
     const response = await fetch(url);
     const data = await response.json();
 
