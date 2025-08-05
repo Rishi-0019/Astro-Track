@@ -1,4 +1,3 @@
-// src/components/SatelliteTracker.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -36,9 +35,9 @@ const SatelliteTracker = () => {
         }
 
         try {
-            // Fetch satellite data from your backend
-            const response = await axios.get(`/api/position/${selectedSatellite}`, {
-                params: { lat, lng, alt }
+            // Fetch satellite position using satid as a query param
+            const response = await axios.get('/api/position', {
+                params: { satid: selectedSatellite, lat, lng, alt }
             });
             setSatellitePosition(response.data);
         } catch (error) {

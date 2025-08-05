@@ -8,7 +8,6 @@ const SearchComponent: React.FC = () => {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [user, setUser] = useState<any>(null);  // Firebase user
-
   const maxSearches = 5;  // Set your limit here
 
   // Get current user data from Firebase
@@ -32,17 +31,19 @@ const SearchComponent: React.FC = () => {
       setError('User not authenticated!');
       return;
     }
-
     if (searchCount >= maxSearches) {
       setError('You have reached the maximum number of searches.');
       return;
     }
+    if (!searchQuery.trim()) {
+      setError('Please enter a valid search query.');
+      return;
+    }
 
-    // Update the user profile in Firestore
     try {
       await updateUserProfile(user, searchQuery);
-      setSearchCount((prev) => prev - 1);  // Decrement search count
-      setRecentSearches((prev) => [searchQuery, ...prev].slice(0, 5));  // Add to recent searches and keep the array size to 5
+      setSearchCount((prev) => prev + 1);  // Increment search count on new search
+      setRecentSearches((prev) => [searchQuery, ...prev].slice(0, maxSearches));
       setSearchQuery('');  // Clear the search input field
       setError('');
     } catch (err) {
@@ -73,7 +74,7 @@ const SearchComponent: React.FC = () => {
 
       {error && <p className="error">{error}</p>}
 
-      <p>{`You have made ${maxSearches - searchCount} search${searchCount !== 1 ? 'es' : ''}.`}</p>
+      <p>{`You have made ${searchCount} search${searchCount !== 1 ? 'es' : ''} out of ${maxSearches}.`}</p>
       {searchCount >= maxSearches && <p>You have reached the maximum search limit.</p>}
 
       <h4>Recent Searches</h4>
