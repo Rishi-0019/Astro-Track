@@ -1,28 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Globe from 'globe.gl';
 
 const GlobeComponent = () => {
-  const globeContainer = useRef(null);
+  const globeContainer = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const globe = Globe()
-      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg') // Add a dark Earth texture
-      .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png') // Optional: Add a bump map for texture
-      .pointsData([]) // Optional: You can add points of interest here
+    if (!globeContainer.current) return;
+
+    // Instantiate the Globe in the container. No manual append/remove needed!
+    new Globe(globeContainer.current)
+      .globeImageUrl('//unpkg.com/three-globe/example/img/earth-dark.jpg')
+      .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+      .pointsData([])
       .pointRadius(0.1)
-      .pointColor(() => 'rgba(255, 255, 255, 0.5)') // For a starry effect
-      .pointAltitude(0.1);
-
-    // Adding stars using a background texture
-    globeContainer.current.appendChild(globe());
-
-    // Optional: Add additional customization or star animations
-    globe
-      .backgroundColor('#000') // Dark background to make stars visible
-      .starFieldColor('#fff') // Star field color (white stars)
-      .starFieldDensity(0.1); // Density of the stars in the background
-
-    return () => globeContainer.current.removeChild(globe());
+      .pointColor(() => 'rgba(255, 255, 255, 0.5)')
+      .pointAltitude(0.1)
+      .backgroundColor('#000');
   }, []);
 
   return (

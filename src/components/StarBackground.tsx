@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import './StarBackground.css';
 
 const StarBackground: React.FC = () => {
   useEffect(() => {
-    const stars = Array.from({ length: 100 }, (_, i) => {
+    // 'i' removed since it's unused
+    const stars = Array.from({ length: 100 }, () => {
       const star = document.createElement('div');
       star.className = 'star';
       star.style.left = `${Math.random() * 100}%`;

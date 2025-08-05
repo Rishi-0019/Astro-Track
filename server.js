@@ -1,8 +1,8 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 
@@ -12,6 +12,11 @@ const API_KEY = process.env.N2YO_API_KEY;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Your existing API routes
 
 app.get('/api/satellites', async (req, res) => {
   const { lat, lng, alt } = req.query;
@@ -58,6 +63,11 @@ app.get('/api/position/:satid', async (req, res) => {
     console.error('Error fetching satellite position:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});
+
+// For SPA: Serve index.html for all other unmatched routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {
