@@ -117,90 +117,75 @@ body {
 
 /* Animated neon buttons */
 .header-controls button {
-  background: linear-gradient(135deg, rgba(58,117,224,0.25) 0%, rgba(0,245,212,0.15) 100%);
-  border: 2.5px solid #00f5d4;
-  padding: 14px 18px;
-  border-radius: 18px;
-  color: #fff;
-  font-size: 1.25rem;
+  background: linear-gradient(145deg, #1c1f2a, #283048);
+  border: 2px solid transparent;
+  color: #00f5d4;
+  padding: 12px 20px;
+  font-size: 1.1rem;
   font-weight: 600;
-  box-shadow: 0 0 8px #00f5d4aa, 0 0 18px #4f8cff88;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(.4,0,.2,1);
+  box-shadow:
+    0 0 8px rgba(0, 245, 212, 0.4),
+    inset 0 0 5px rgba(0, 245, 212, 0.2);
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
   position: relative;
-  outline: none;
   user-select: none;
-  animation: neonPulse 4.5s ease-in-out infinite alternate;
-}
-
-@keyframes neonPulse {
-  0% {
-    box-shadow: 0 0 8px #00f5d4aa, 0 0 18px #4f8cff88;
-  }
-  100% {
-    box-shadow: 0 0 14px #00f5d4ee, 0 0 28px #4f8cffcc;
-  }
+  outline-offset: 3px;
 }
 
 .header-controls button:hover {
-  background: linear-gradient(135deg, #0ff6f9 30%, #7e50b8 100%);
-  border-color: #7e50b8;
+  background: linear-gradient(145deg, #00f5d4, #2a88ff);
   color: #fff;
   box-shadow:
-    0 0 20px #00f5d4,
-    0 0 35px #7e50b8,
-    0 0 60px #a391f6;
-  transform: scale(1.1) rotate(-2deg);
-  animation-play-state: paused;
+    0 0 15px rgba(0, 245, 212, 0.8),
+    inset 0 0 8px rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
 }
 
 .header-controls button:active {
-  transform: scale(0.93) rotate(1deg);
   box-shadow:
-    0 0 12px #a391f6,
-    0 0 20px #7e50b8 inset;
-  transition-duration: 0.12s;
+    inset 0 3px 6px rgba(0, 245, 212, 0.5);
+  transform: scale(0.97);
+  transition-duration: 0.1s;
 }
 
 .header-controls button:focus-visible {
-  outline: 3px solid #00f5d4cc;
-  outline-offset: 4px;
+  outline: 2px solid #00f5d4;
+  outline-offset: 3px;
 }
 
-/* Logout button with red neon animation */
+/* Logout Button - Distinct but Clean */
 .header-controls .logout-button {
-  border-color: #d70071;
-  background: rgba(215, 0, 113, 0.09);
-  animation: neonPulseRed 4.8s ease-in-out infinite alternate;
-  box-shadow: 0 0 8px #d7007133, 0 0 18px #ff2a7b88;
-}
-
-@keyframes neonPulseRed {
-  0% {
-    box-shadow: 0 0 8px #d7007133, 0 0 18px #ff2a7b88;
-  }
-  100% {
-    box-shadow: 0 0 12px #ff1a5a99, 0 0 24px #ff3a7baa;
-  }
+  background: linear-gradient(145deg, #3d0f1f, #641934);
+  border: 2px solid #e74373;
+  color: #ff7aa9;
+  box-shadow:
+    0 0 8px rgba(231, 67, 115, 0.4),
+    inset 0 0 5px rgba(231, 67, 115, 0.2);
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
 }
 
 .header-controls .logout-button:hover {
-  background: linear-gradient(90deg, #d70071 0%, #ff3a7b 100%);
-  box-shadow:
-    0 0 24px #d70071,
-    0 0 38px #ff3399,
-    0 0 60px #ff77bba0;
+  background: linear-gradient(145deg, #ff4a8d, #d42261);
   color: #fff;
-  border-color: #ff3399;
-  transform: scale(1.12) rotate(2deg);
-  animation-play-state: paused;
+  box-shadow:
+    0 0 18px rgba(255, 74, 141, 0.9),
+    inset 0 0 10px rgba(255, 255, 255, 0.3);
+  transform: scale(1.07);
 }
 
 .header-controls .logout-button:active {
-  transform: scale(0.9) rotate(-1deg);
-  box-shadow:
-    0 0 16px #ff77bb,
-    0 0 24px #d7007188 inset;
+  box-shadow: inset 0 3px 6px rgba(255, 74, 141, 0.6);
+  transform: scale(0.95);
   transition-duration: 0.1s;
 }
 
