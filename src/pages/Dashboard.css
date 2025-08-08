@@ -17,6 +17,7 @@
   overflow: visible;
   user-select: none;
   transition: box-shadow 0.6s ease, background 0.6s ease;
+  animation: headerGlowPulse 6s ease-in-out infinite;
 }
 
 /* Subtle glowing pulse animation for header */
@@ -33,9 +34,6 @@
   }
 }
 
-.dashboard-header {
-  animation: headerGlowPulse 6s ease-in-out infinite;
-}
 
 /* --- Neon Glow for Header Title --- */
 .header-title {
@@ -97,7 +95,6 @@
   align-items: center;
   gap: 28px;
 }
-
 
 /* --- Modern Neon Buttons --- */
 .header-controls button {
