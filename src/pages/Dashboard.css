@@ -1,4 +1,4 @@
-/* Global Styles */
+/* === Global Styles === */
 *,
 *::before,
 *::after {
@@ -14,7 +14,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Glassmorphism Effect */
+/* === Glassmorphism Effect === */
 .glass {
   backdrop-filter: blur(10px);
   background-color: rgba(255, 255, 255, 0.1);
@@ -23,7 +23,7 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Dashboard Layout */
+/* === Dashboard Layout === */
 .dashboard-container {
   display: flex;
   flex-direction: column;
@@ -32,22 +32,48 @@ body {
   background-color: #0e0f14;
 }
 
+/* === Header (Improved) === */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+  padding: 24px 40px;
   position: sticky;
   top: 0;
   z-index: 10;
+  background: rgba(18, 23, 38, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  animation: floatHeader 6s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(0, 245, 212, 0.05);
+  transition: background 0.3s ease;
+}
+
+@keyframes floatHeader {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
 .header-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #f0f0f0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #00f5d4;
+  text-shadow: 0 0 10px #00f5d4;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
+.header-title:hover {
+  color: #ffffff;
+  transform: scale(1.03);
+  text-shadow: 0 0 15px #00f5d4, 0 0 20px #00f5d4;
+}
+
+/* === Header Controls (Animated Buttons) === */
 .header-controls {
   display: flex;
   gap: 20px;
@@ -55,24 +81,71 @@ body {
 }
 
 .header-controls button {
-  background: none;
-  border: 2px solid #fff;
-  padding: 8px;
+  background: linear-gradient(145deg, #1a1a2e, #16213e);
+  border: 2px solid #00f5d4;
+  padding: 10px;
   border-radius: 50%;
-  color: #fff;
+  color: #00f5d4;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 245, 212, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-controls button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0,245,212,0.2) 0%, transparent 80%);
+  transform: scale(0);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.header-controls button:hover::before {
+  transform: scale(1);
+  opacity: 1;
 }
 
 .header-controls button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 245, 212, 0.1);
   transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 245, 212, 0.6), 0 0 30px rgba(0, 245, 212, 0.4);
 }
 
+.header-controls button:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 10px rgba(0, 245, 212, 0.3);
+}
+
+/* === Clock Style === */
 .clock {
-  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-family: 'Orbitron', sans-serif;
+  color: #00f5d4;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 1px solid #00f5d4;
+  box-shadow: 0 0 10px rgba(0, 245, 212, 0.3);
+  transition: all 0.3s ease;
+  margin: 0 10px;
+  cursor: default;
 }
 
+.clock:hover {
+  background: rgba(0, 245, 212, 0.1);
+  color: #ffffff;
+  box-shadow: 0 0 12px #00f5d4, 0 0 18px #00f5d4;
+  transform: scale(1.05);
+}
+
+/* === Layout & Sections === */
 .main-layout {
   display: flex;
   justify-content: space-between;
@@ -80,17 +153,12 @@ body {
   gap: 20px;
 }
 
-.tracker-section {
+.tracker-section,
+.satellite-info-section {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.satellite-info-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
 }
 
 .satellite-card,
@@ -120,16 +188,12 @@ body {
   gap: 10px;
 }
 
-.error-message svg {
-  color: #fff;
-}
-
 .loader {
   font-size: 1.2rem;
   color: #fff;
 }
 
-/* Satellite Selection */
+/* === Satellite Selection Dropdown === */
 .selection-controls {
   display: flex;
   flex-direction: column;
@@ -137,43 +201,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* Track Satellite Button - Decorative */
-.track-satellite-btn {
-  background: linear-gradient(145deg, #6a3e9e, #7e50b8);
-  border: 2px solid transparent;
-  padding: 15px 24px;
-  color: #ffffff;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(138, 80, 211, 0.3);
-  position: relative;
-}
-
-.track-satellite-btn:hover {
-  background: linear-gradient(145deg, #7e50b8, #6a3e9e);
-  border-color: #a874f8;
-  box-shadow: 0 4px 18px rgba(138, 80, 211, 0.5);
-  transform: scale(1.05);
-}
-
-.track-satellite-btn:active {
-  transform: scale(0.97);
-  box-shadow: 0 4px 10px rgba(138, 80, 211, 0.5);
-}
-
-.track-satellite-btn:disabled {
-  background-color: #dcdcdc;
-  color: #888;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* Satellite Dropdown - Decorative */
 .selection-controls select {
   background: linear-gradient(145deg, #1a1a2e, #16213e);
   color: #00f5d4;
@@ -195,34 +222,46 @@ body {
   box-shadow: 0 0 15px #00f5d4, 0 0 25px #00f5d4;
 }
 
-.selection-controls select:focus {
-  border-color: #00f5d4;
-  box-shadow: 0 0 20px #00f5d4, 0 0 30px #00f5d4;
+.selection-controls option {
+  background: #0e0f14;
+  color: #fff;
 }
 
-.selection-controls select:disabled {
-  background: #2c2c54;
-  color: #999;
-  border: 1px solid #444;
+/* === Track Satellite Button === */
+.track-satellite-btn,
+.track-satellites-button {
+  background: linear-gradient(145deg, #6a3e9e, #7e50b8);
+  border: 2px solid transparent;
+  padding: 15px 24px;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(138, 80, 211, 0.3);
+  position: relative;
+}
+
+.track-satellite-btn:hover,
+.track-satellites-button:hover {
+  background: linear-gradient(145deg, #7e50b8, #6a3e9e);
+  border-color: #a874f8;
+  box-shadow: 0 4px 18px rgba(138, 80, 211, 0.5);
+  transform: scale(1.05);
+}
+
+.track-satellite-btn:disabled,
+.track-satellites-button:disabled {
+  background-color: #dcdcdc;
+  color: #888;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* Custom Option Styling */
-.selection-controls option {
-  background: #0e0f14;
-  color: #fff;
-  padding: 10px;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-}
-
-.selection-controls option:hover {
-  background: #1a1a2e;
-}
-
-/* News Feed Section */
+/* === News Feed === */
 .news-feed {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
@@ -234,10 +273,6 @@ body {
 .news-feed h2 {
   font-size: 1.5rem;
   margin-bottom: 15px;
-}
-
-.news-feed p {
-  font-size: 1rem;
 }
 
 .news-card {
@@ -258,7 +293,7 @@ body {
   flex-direction: column;
 }
 
-/* Globe Container */
+/* === Globe Container === */
 .globe-container {
   position: relative;
   width: 100%;
@@ -267,6 +302,47 @@ body {
   overflow: hidden;
   background-color: #000;
 }
+
+.globe-container .globe {
+  background: transparent !important;
+}
+
+/* === Misc & Responsive === */
+.decorative-box {
+  position: relative;
+  z-index: 1;
+}
+
+.globe-container:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
+  }
+
+  .tracker-section,
+  .satellite-info-section {
+    flex: 0;
+    width: 100%;
+  }
+
+  .globe-container {
+    width: 100%;
+    height: 400px;
+  }
+}
+
+/* Globe Container 
+.globe-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #000;
+} */
 
 .globe-container .globe {
   background: transparent !important;
