@@ -56,7 +56,6 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [news, setNews] = useState<News[]>([]);
-
   const globeEl = useRef<any>(null);
 
   useEffect(() => {
@@ -64,6 +63,7 @@ const Dashboard: React.FC = () => {
     getSpaceNews();
     const clock = setInterval(() => setCurrentTime(new Date().toLocaleTimeString()), 1000);
     return () => clearInterval(clock);
+    // eslint-disable-next-line
   }, []);
 
   const getSatellites = async () => {
@@ -106,9 +106,9 @@ const Dashboard: React.FC = () => {
       const data = await fetchSatellitePosition(sat.satid);
       const pos = data.positions?.[0];
       if (!pos) continue;
-
       const last = satellitePositions.find(s => s.satid === sat.satid);
       const locationName = await getLocationName(pos.satlatitude, pos.satlongitude);
+
       const speed = last?.lastTimestamp && now - last.lastTimestamp > 0
         ? haversineDistance(last.latitude, last.longitude, pos.satlatitude, pos.satlongitude) / ((now - last.lastTimestamp) / 3600000)
         : 0;
@@ -169,16 +169,28 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="dashboard-container">
+
       <StarBackground />
       <MeteorFX />
       <GalaxyFX />
 
       <header className="dashboard-header glass">
-        <h1>
-          AstroTrack <FaSatellite />
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          {/* Twinkling cosmic glitter */}
+          <div className="header-stars"></div>
+          <span className="header-title">
+            <span style={{ letterSpacing: 4 }}>AstroTrack</span>
+            <FaSatellite style={{
+              marginLeft: 14,
+              fontSize: 32,
+              color: "#4f8cff",
+              filter: "drop-shadow(0 0 10px #00f5d4)"
+            }} />
+          </span>
+        </div>
         <div className="header-controls">
           <button
+            title="Toggle Map Style"
             onClick={() =>
               setMapStyle(mapStyle === 'night' ? 'day' : mapStyle === 'day' ? 'space' : 'night')
             }
@@ -187,10 +199,10 @@ const Dashboard: React.FC = () => {
           </button>
           <span className="clock">{currentTime}</span>
           <button onClick={() => navigate('/profile')}>
-            <FaUserCircle /> Profile
+            <FaUserCircle style={{ marginRight: 6 }} /> Profile
           </button>
           <button className="logout-button" onClick={handleLogout}>
-            <FaSignOutAlt /> Logout
+            <FaSignOutAlt style={{ marginRight: 6 }} /> Logout
           </button>
         </div>
       </header>
@@ -206,13 +218,14 @@ const Dashboard: React.FC = () => {
           />
           <HCaptcha sitekey="04086578-873e-4f9e-85b0-a7fcbdb2c996" onVerify={setCaptchaToken} />
           <button
+            className="track-satellites-button"
             disabled={loading.position || !selectedSatellites.length || !captchaToken}
             onClick={handleTrackSatellites}
           >
             {loading.position ? 'Tracking...' : 'Track Satellites'}
           </button>
           {error && (
-            <p className="error">
+            <p className="error-message">
               <FaExclamationTriangle /> {error}
             </p>
           )}
@@ -257,7 +270,7 @@ const Dashboard: React.FC = () => {
             />
           </div>
 
-          <div className="news-section glass">
+          <div className="news-section glass news-feed">
             <h3>Latest Space News</h3>
             <div className="news-list">
               {news.map((n, idx) => (
