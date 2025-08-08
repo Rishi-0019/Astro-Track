@@ -1,4 +1,4 @@
-/* Global Styles */
+/* Global Styles and Reset */
 *,
 *::before,
 *::after {
@@ -10,20 +10,25 @@
 body {
   font-family: 'Arial', sans-serif;
   background-color: #0e0f14;
-  color: #fff;
+  color: #e0e7ff;
   overflow-x: hidden;
+  user-select: none;
 }
 
-/* Glassmorphism Effect */
+/* Glassmorphism Panel Base */
 .glass {
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(15, 20, 40, 0.5);
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  box-shadow:
+    0 0 15px rgba(0, 245, 212, 0.25),
+    inset 0 0 25px rgba(0, 245, 212, 0.1);
+  border: 1px solid rgba(0, 245, 212, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Dashboard Layout */
+/* Dashboard Container */
 .dashboard-container {
   display: flex;
   flex-direction: column;
@@ -32,7 +37,7 @@ body {
   background-color: #0e0f14;
 }
 
-/* ------- HEADER VISUAL EFFECTS ------- */
+/* Header Visual Effects */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -43,42 +48,49 @@ body {
   top: 0;
   z-index: 20;
   border-radius: 24px;
-  background: linear-gradient(135deg, rgba(58, 71, 112, 0.44) 0%, rgba(46, 37, 70, 0.65) 100%);
-  box-shadow: 0 6px 32px 0 rgba(44, 180, 229, 0.12), 0 1.5px 12px 0 #4c00f5;
+  background: linear-gradient(135deg, rgba(25, 29, 51, 0.7) 0%, rgba(40, 42, 74, 0.85) 100%);
+  border: 1.6px solid #5a4f7d;
+  box-shadow:
+    0 0 20px #4a3f6a66,
+    inset 0 0 30px #624da1cc;
   overflow: visible;
-  border: 1.5px solid rgba(0, 245, 212, 0.14);
-  animation: headerGlow 2.5s linear infinite alternate;
+  animation: headerGlow 5s ease-in-out infinite alternate;
+  user-select: none;
   transition: box-shadow 0.4s cubic-bezier(0.4, 2, 0.5, 0.8);
 }
 
 @keyframes headerGlow {
   0% {
-    box-shadow: 0 6px 32px 0 rgba(44, 180, 229, 0.12), 0 0px 12px 0 #4c00f5;
+    box-shadow:
+      0 0 20px #4a3f6a66,
+      inset 0 0 30px #624da1cc;
   }
   100% {
-    box-shadow: 0 12px 40px 0 rgba(0, 245, 212, 0.20), 0 2.5px 15px 0 #3c5dff;
+    box-shadow:
+      0 0 30px #796eb8aa,
+      inset 0 0 40px #8a76c6dd;
   }
 }
 
-/* Twinkling cosmic header glitter */
+/* Twinkling Cosmic Header Glitter */
 .header-stars {
   position: absolute;
   left: 0;
   right: 0;
-  top: -26px;
+  top: -34px;
   width: 100%;
   height: 32px;
   pointer-events: none;
   z-index: 3;
   background:
-    radial-gradient(circle at 20% 60%, #f0f0f040 2px, transparent 1.5px),
-    radial-gradient(circle at 60% 40%, #21e7ff60 1.5px, transparent 1.2px),
-    radial-gradient(circle at 80% 90%, #e4cafc 1.5px, transparent 1.2px),
-    radial-gradient(circle at 40% 10%, #f0f0f0 3px, transparent 2.3px),
-    radial-gradient(circle at 55% 80%, #ffb7ec99 2px, transparent 1.5px);
-  background-size: 320px 32px;
-  animation: starsMove 6s linear infinite;
-  opacity: 0.38;
+    radial-gradient(circle at 20% 60%, #a7b0ff77 2.5px, transparent 1.5px),
+    radial-gradient(circle at 50% 40%, #93f7ff88 1.5px, transparent 1.2px),
+    radial-gradient(circle at 80% 90%, #c4aaff99 1.4px, transparent 1.1px),
+    radial-gradient(circle at 40% 10%, #dde7ffcc 2.7px, transparent 2.3px),
+    radial-gradient(circle at 55% 80%, #ffffffbb 1.7px, transparent 1.3px);
+  background-size: 360px 32px;
+  animation: starsMove 6.5s linear infinite;
+  opacity: 0.45;
 }
 
 @keyframes starsMove {
@@ -86,130 +98,162 @@ body {
     background-position-x: 0;
   }
   to {
-    background-position-x: 320px;
+    background-position-x: 360px;
   }
 }
 
+/* Header Title */
 .header-title {
-  font-size: 2.4rem;
-  font-weight: 800;
-  letter-spacing: 2.5px;
-  color: #00f6d2;
-  background: linear-gradient(90deg, #00f5d4 0%, #4f8cff 55%, #a391f6 100%);
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, #a298d7 0%, #6f76d8 55%, #bbcdfd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px #00f5d4c0) drop-shadow(0 0px 20px #a391f680);
-  text-shadow: 0 2px 20px #4f8cff70;
-  transition: 0.2s;
-  user-select: none;
+  filter:
+    drop-shadow(0 0 4px #9a9deeaa)
+    drop-shadow(0 0 10px #c4cfffcc);
+  text-shadow: 0 0 6px #7f81b7aa;
+  cursor: default;
+  user-select: text;
+  transition: filter 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .header-title:hover {
-  filter: drop-shadow(0 0px 24px #00f5d4ff);
-  color: #ffffff;
-  transform: scale(1.04) rotate(-2deg);
-  cursor: pointer;
+  filter:
+    drop-shadow(0 0 10px #9a9deeee)
+    drop-shadow(0 0 20px #c4cfffee);
+  transform: scale(1.07) rotate(-1.5deg);
 }
 
+/* Header Controls */
 .header-controls {
   display: flex;
-  gap: 26px;
+  gap: 28px;
   align-items: center;
 }
 
-/* Modern, sleek header buttons */
+/* Modern, Sleek Header Buttons */
 .header-controls button {
-  background: linear-gradient(145deg, #1c1f2a, #283048);
+  background: linear-gradient(145deg, #2c2f48, #3b4071);
   border: 2px solid transparent;
-  color: #00f5d4;
-  padding: 12px 20px;
-  font-size: 1.1rem;
+  color: #a7b0ff;
+  padding: 12px 22px;
+  font-size: 1.15rem;
   font-weight: 600;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   box-shadow:
-    0 0 8px rgba(0, 245, 212, 0.4),
-    inset 0 0 5px rgba(0, 245, 212, 0.2);
+    0 0 10px rgba(167, 176, 255, 0.4),
+    inset 0 0 8px rgba(167, 176, 255, 0.15);
   transition:
-    background 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.2s ease;
-  position: relative;
-  user-select: none;
-  outline-offset: 3px;
+    background 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
 }
 
 .header-controls button svg {
+  margin-right: 8px;
   vertical-align: middle;
-  margin-right: 6px;
+  fill: currentColor;
 }
 
 .header-controls button:hover {
-  background: linear-gradient(145deg, #00f5d4, #2a88ff);
-  color: #fff;
+  background: linear-gradient(145deg, #848be0, #b2b7ff);
+  color: #1a1f47;
   box-shadow:
-    0 0 15px rgba(0, 245, 212, 0.8),
-    inset 0 0 8px rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
+    0 0 24px #848be0cc,
+    inset 0 0 12px #b2b7ffcc;
+  transform: scale(1.07) translateY(-2px);
 }
 
 .header-controls button:active {
-  box-shadow:
-    inset 0 3px 6px rgba(0, 245, 212, 0.5);
-  transform: scale(0.97);
-  transition-duration: 0.1s;
+  box-shadow: inset 0 2px 8px rgba(132, 139, 224, 0.7);
+  transform: scale(0.95);
+  transition-duration: 0.15s;
 }
 
 .header-controls button:focus-visible {
-  outline: 2px solid #00f5d4;
-  outline-offset: 3px;
+  outline: 3px solid #848be0cc;
+  outline-offset: 4px;
 }
 
-/* Logout Button: distinct but subtle */
+/* Logout Button: Distinct but Subtle */
 .header-controls .logout-button {
-  background: linear-gradient(145deg, #3d0f1f, #641934);
-  border: 2px solid #e74373;
-  color: #ff7aa9;
+  background: linear-gradient(145deg, #581e3e, #814d6a);
+  border: 2px solid #c68ab2;
+  color: #e7b0db;
   box-shadow:
-    0 0 8px rgba(231, 67, 115, 0.4),
-    inset 0 0 5px rgba(231, 67, 115, 0.2);
+    0 0 16px rgba(230, 176, 219, 0.5),
+    inset 0 0 12px rgba(230, 176, 219, 0.2);
   transition:
-    background 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.25s ease;
 }
 
 .header-controls .logout-button:hover {
-  background: linear-gradient(145deg, #ff4a8d, #d42261);
-  color: #fff;
+  background: linear-gradient(145deg, #b386ba, #e8b9dc);
+  color: #2a1a33;
   box-shadow:
-    0 0 18px rgba(255, 74, 141, 0.9),
-    inset 0 0 10px rgba(255, 255, 255, 0.3);
-  transform: scale(1.07);
+    0 0 28px #e8b9dcdd,
+    inset 0 0 16px #f0cbeaee;
+  transform: scale(1.1);
 }
 
 .header-controls .logout-button:active {
-  box-shadow: inset 0 3px 6px rgba(255, 74, 141, 0.6);
-  transform: scale(0.95);
-  transition-duration: 0.1s;
+  box-shadow: inset 0 3px 11px rgba(183, 98, 154, 0.7);
+  transform: scale(0.94);
+  transition-duration: 0.12s;
 }
 
-/* ------ Main Layout Sections ------ */
+/* Clock Styling */
+.clock {
+  font-family: 'Orbitron', monospace;
+  background: rgba(104, 93, 155, 0.15);
+  padding: 12px 26px;
+  border-radius: 14px;
+  color: #b0b9ff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border: 1.6px solid rgba(129, 121, 192, 0.4);
+  box-shadow: 0 0 16px rgba(129, 121, 192, 0.5);
+  user-select: none;
+  cursor: default;
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.clock:hover {
+  box-shadow: 0 0 30px #a192f4, 0 0 45px #b6a6ff;
+  color: #d4d9ff;
+  transform: scale(1.12);
+}
+
+/* Satellite Card Improvements */
+.satellite-card:hover {
+  box-shadow: 0 0 26px #6f7cdcaa, 0 0 48px #a7a8fddd;
+  transform: scale(1.04);
+}
+
+/* Main Layout */
 .main-layout {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
-  gap: 20px;
+  padding: 30px 48px;
+  gap: 28px;
   flex-wrap: wrap;
 }
+
 
 .tracker-section {
   flex: 1;
