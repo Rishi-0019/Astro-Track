@@ -1,451 +1,331 @@
-/* === Global Styles === */
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* Dashboard.css */
 
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #0e0f14;
-  color: #fff;
+/* Base container and background */
+.dashboard-container {
+  background: radial-gradient(ellipse at center, #000010 0%, #000000 90%);
+  color: #e0e6f8;
+  font-family: 'Orbitron', 'Courier New', Courier, monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden;
 }
 
-/* === Glassmorphism Effect === */
+/* Glass effect for panels */
 .glass {
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  background: rgba(10, 10, 30, 0.6);
+  border-radius: 12px;
+  box-shadow:
+    0 0 10px 2px rgba(0, 255, 255, 0.2),
+    inset 0 0 20px 1px rgba(10, 10, 50, 0.7);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgba(0, 255, 255, 0.3);
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  color: #a0caff;
 }
 
-/* === Dashboard Layout === */
-.dashboard-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  position: relative;
-  background-color: #0e0f14;
-}
-
-/* === Header (Improved) === */
+/* Header style */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 40px;
+  padding: 12px 30px;
+  box-shadow: 0 0 30px #00fff7aa;
   position: sticky;
   top: 0;
-  z-index: 10;
-  background: rgba(18, 23, 38, 0.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  animation: floatHeader 6s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(0, 245, 212, 0.05);
-  transition: background 0.3s ease;
-}
-
-@keyframes floatHeader {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
+  z-index: 100;
+  background-color: rgba(5, 5, 15, 0.9);
+  border-bottom: 2px solid #00fff7aa;
 }
 
 .header-title {
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 6px;
   color: #00f5d4;
-  text-shadow: 0 0 10px #00f5d4;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.header-title:hover {
-  color: #ffffff;
-  transform: scale(1.03);
-  text-shadow: 0 0 15px #00f5d4, 0 0 20px #00f5d4;
-}
-
-/* === Header Controls (Animated Buttons) === */
-.header-controls {
   display: flex;
-  gap: 20px;
   align-items: center;
+  gap: 12px;
+  text-shadow: 0 0 8px #00f5d4, 0 0 15px #00cbbd;
+}
+
+.satellite-icon {
+  font-size: 38px;
+  filter: drop-shadow(0 0 15px #00f5d4);
 }
 
 .header-controls button {
-  background: linear-gradient(145deg, #1a1a2e, #16213e);
-  border: 2px solid #00f5d4;
-  padding: 10px;
-  border-radius: 50%;
-  color: #00f5d4;
+  background: transparent;
+  border: none;
+  color: #00dacf;
+  font-size: 20px;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 245, 212, 0.4);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.header-controls button::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(0,245,212,0.2) 0%, transparent 80%);
-  transform: scale(0);
-  opacity: 0;
-  transition: all 0.4s ease;
-}
-
-.header-controls button:hover::before {
-  transform: scale(1);
-  opacity: 1;
+  margin-left: 15px;
+  transition: color 0.3s ease;
 }
 
 .header-controls button:hover {
-  background-color: rgba(0, 245, 212, 0.1);
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(0, 245, 212, 0.6), 0 0 30px rgba(0, 245, 212, 0.4);
+  color: #00fff7;
+  text-shadow: 0 0 15px #00fff7;
 }
 
-.header-controls button:active {
-  transform: scale(0.95);
-  box-shadow: 0 0 10px rgba(0, 245, 212, 0.3);
-}
-
-/* === Clock Style === */
 .clock {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-family: 'Orbitron', sans-serif;
-  color: #00f5d4;
-  font-size: 1rem;
-  font-weight: bold;
-  border: 1px solid #00f5d4;
-  box-shadow: 0 0 10px rgba(0, 245, 212, 0.3);
-  transition: all 0.3s ease;
-  margin: 0 10px;
-  cursor: default;
+  font-family: 'Orbitron', monospace;
+  font-size: 20px;
+  color: #00dacf;
+  padding: 0 15px;
+  text-shadow: 0 0 8px #00f5d4;
 }
 
-.clock:hover {
-  background: rgba(0, 245, 212, 0.1);
-  color: #ffffff;
-  box-shadow: 0 0 12px #00f5d4, 0 0 18px #00f5d4;
-  transform: scale(1.05);
-}
-
-/* === Layout & Sections === */
+/* Main layout */
 .main-layout {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  gap: 20px;
-}
-
-.tracker-section,
-.satellite-info-section {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  padding: 20px 30px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.satellite-card,
-.placeholder-card {
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 15px;
-  border-radius: 8px;
-  color: #fff;
+/* Tracker section */
+.tracker-section {
+  flex: 1 1 320px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Satellite info cards */
+.satellite-info-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 440px;
+  overflow-y: auto;
+}
+
+.satellite-card {
+  padding: 14px 18px;
+  background: rgba(0, 40, 70, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 0 8px #00e0ffcc;
+  border: 1px solid #0088cc88;
+  font-size: 15px;
+  text-shadow: 0 0 6px #00bbff7a;
 }
 
 .satellite-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #00d9ff;
 }
 
-.satellite-card p {
-  margin-bottom: 5px;
-}
-
-.error-message {
-  background-color: #f44336;
-  color: #fff;
-  padding: 10px;
+/* Track button */
+.track-satellites-button {
+  background-color: #00f5d4;
+  color: #001f28;
+  font-weight: 700;
+  border: none;
   border-radius: 8px;
+  padding: 12px 15px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #00f5d4;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.track-satellites-button:disabled {
+  background-color: #00494d;
+  color: #003033;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.track-satellites-button:hover:not(:disabled) {
+  background-color: #00fff7;
+  color: #000a0c;
+  box-shadow: 0 0 18px #00fff7;
+}
+
+/* Error message */
+.error-message {
+  color: #ff5252;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  margin-top: 6px;
+  text-shadow: 0 0 6px #ff4646;
 }
 
-.loader {
-  font-size: 1.2rem;
-  color: #fff;
-}
-
-/* === Satellite Selection Dropdown === */
-.selection-controls {
+/* Globe and news section */
+.globe-news-section {
+  flex: 2 1 600px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 16px;
 }
 
-.selection-controls select {
-  background: linear-gradient(145deg, #1a1a2e, #16213e);
-  color: #00f5d4;
-  border: 1px solid #00f5d4;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 245, 212, 0.5);
-  transition: all 0.3s ease;
-  width: 100%;
-  text-align: center;
+.globe-container {
+  border-radius: 14px;
+  box-shadow: 0 0 30px #0088cccc;
+  overflow: hidden;
+  background: #001522;
+  max-height: 600px;
 }
 
-.selection-controls select:hover {
-  background: #0f3460;
-  color: #f0f0f0;
-  box-shadow: 0 0 15px #00f5d4, 0 0 25px #00f5d4;
+.news-section {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 0 15px #004466aa;
+  background: rgba(0, 0, 20, 0.8);
+  color: #a0d1ff;
+  font-size: 14px;
 }
 
-.selection-controls option {
-  background: #0e0f14;
-  color: #fff;
+.news-section h3 {
+  color: #00c3ff;
+  margin-bottom: 12px;
+  text-shadow: 0 0 8px #00b7ff;
 }
 
-/* === Track Satellite Button === */
-.track-satellite-btn,
-.track-satellites-button {
-  background: linear-gradient(145deg, #6a3e9e, #7e50b8);
-  border: 2px solid transparent;
-  padding: 15px 24px;
-  color: #ffffff;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(138, 80, 211, 0.3);
-  position: relative;
+.news-list > .news-item {
+  margin-bottom: 14px;
+  border-bottom: 1px solid #00334488;
+  padding-bottom: 8px;
 }
 
-.track-satellite-btn:hover,
-.track-satellites-button:hover {
-  background: linear-gradient(145deg, #7e50b8, #6a3e9e);
-  border-color: #a874f8;
-  box-shadow: 0 4px 18px rgba(138, 80, 211, 0.5);
-  transform: scale(1.05);
+.news-list > .news-item h4 a {
+  color: #74d0ff;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.track-satellite-btn:disabled,
-.track-satellites-button:disabled {
-  background-color: #dcdcdc;
-  color: #888;
-  cursor: not-allowed;
-  box-shadow: none;
+.news-list > .news-item h4 a:hover {
+  color: #a8e8ff;
+  text-shadow: 0 0 6px #90d9ff;
 }
 
-/* === News Feed === */
-.news-feed {
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  border-radius: 8px;
-  color: #fff;
-  flex-basis: 300px;
+.news-list > .news-item p {
+  margin: 4px 0 0 0;
+  color: #b0cfffcc;
+  line-height: 1.3;
 }
 
-.news-feed h2 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-}
-
-.news-card {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.news-image {
-  width: 120px;
-  height: 80px;
-  object-fit: cover;
+/* React-select overrides for dark theme */
+.css-yk16xz-control {
+  background-color: rgba(0, 15, 40, 0.8);
+  border-color: #0077aa;
+  box-shadow: 0 0 8px #0099dd;
+  color: #aaddff;
   border-radius: 8px;
 }
 
-.news-content {
-  display: flex;
-  flex-direction: column;
+.css-yk16xz-control:hover {
+  border-color: #00aaff;
+  box-shadow: 0 0 12px #00bbff;
 }
 
-/* === Globe Container === */
-.globe-container {
-  position: relative;
-  width: 100%;
-  height: 500px;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #000;
+.css-1pahdxg-control {
+  background-color: rgba(0, 15, 40, 0.8);
+  border-radius: 8px;
+  color: #aaddff;
 }
 
-.globe-container .globe {
-  background: transparent !important;
+.css-1uccc91-singleValue {
+  color: #9dd9ff;
 }
 
-/* === Misc & Responsive === */
-.decorative-box {
-  position: relative;
-  z-index: 1;
+.css-1uccc91-placeholder {
+  color: #88bbdd;
 }
 
-.globe-container:hover {
-  opacity: 0.9;
+.css-1okebmr-indicatorSeparator {
+  background-color: transparent;
 }
 
-@media (max-width: 768px) {
-  .main-layout {
-    flex-direction: column;
-  }
-
-  .tracker-section,
-  .satellite-info-section {
-    flex: 0;
-    width: 100%;
-  }
-
-  .globe-container {
-    width: 100%;
-    height: 400px;
-  }
+.css-1gtu0rj-indicatorContainer {
+  color: #00cfff;
 }
 
-/* Globe Container 
-.globe-container {
-  position: relative;
-  width: 100%;
-  height: 500px;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #000;
-} */
-
-.globe-container .globe {
-  background: transparent !important;
+/* Theme styles for the container to adjust background for mapStyle toggle */
+.theme-night {
+  background: radial-gradient(ellipse at center, #000010 0%, #000000 95%);
 }
 
-/* Additional Styles for Floating Elements */
-.decorative-box {
-  position: relative;
-  z-index: 1;
+.theme-day {
+  background: radial-gradient(ellipse at center, #ddeeff 0%, #aaccff 90%);
+  color: #102240;
 }
 
-.satellite-info-section,
-.tracker-section {
-  flex: 1;
+.theme-day .glass {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(100, 120, 150, 0.7);
+  color: #204060;
+  box-shadow: 0 0 10px #aaccff77;
 }
 
-.satellite-info-section .satellite-card h3,
-.satellite-info-section .satellite-card p {
-  font-size: 1.1rem;
+.theme-day .track-satellites-button {
+  background-color: #004080;
+  color: #cceeff;
+  box-shadow: 0 0 10px #004080aa;
 }
 
-/* Hover Effects */
-.globe-container:hover {
-  opacity: 0.9;
+.theme-day .track-satellites-button:hover:not(:disabled) {
+  background-color: #0066cc;
+  color: #f0f8ff;
+  box-shadow: 0 0 15px #0066ccff;
 }
 
-.header-title:hover {
-  color: #f0f0f0;
-  cursor: pointer;
+/* The "space" theme is darker with cosmic blue accent */
+.theme-space {
+  background: radial-gradient(ellipse at center, #01001a 0%, #00001a 90%);
+  color: #66ccff;
 }
 
-header {
-  background-color: rgba(0, 0, 0, 0.4);
+.theme-space .glass {
+  background: rgba(0, 10, 30, 0.7);
+  border: 1px solid #004477aa;
+  box-shadow: 0 0 8px #2288eecc;
+  color: #88cfff;
 }
 
-/* Responsiveness */
-@media (max-width: 768px) {
-  .main-layout {
-    flex-direction: column;
-  }
-
-  .tracker-section {
-    flex: 0;
-    width: 100%;
-  }
-
-  .satellite-info-section {
-    flex: 0;
-    width: 100%;
-  }
-
-  .globe-container {
-    width: 100%;
-    height: 400px;
-  }
+.theme-space .satellite-card {
+  background: rgba(0, 30, 50, 0.75);
+  border: 1px solid #336699cc;
+  box-shadow: 0 0 10px #3399ffbb;
 }
 
-.track-satellites-button {
-  background: linear-gradient(145deg, #1a1a2e, #16213e);
-  color: #00f5d4;
-  border: 1px solid #00f5d4;
-  padding: 10px 20px;
-  border-radius: 12px;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
-  transition: all 0.3s ease;
-  margin-top: 12px;
+.theme-space .track-satellites-button {
+  background-color: #0055cc;
+  box-shadow: 0 0 15px #5599ffcc;
+  color: #cce6ff;
 }
 
-.track-satellites-button:hover {
-  background: #0f3460;
-  color: #f0f0f0;
-  box-shadow: 0 0 15px #00f5d4, 0 0 25px #00f5d4;
+.theme-space .track-satellites-button:hover:not(:disabled) {
+  background-color: #3377ff;
+  box-shadow: 0 0 20px #66aaffdd;
+  color: white;
 }
 
-.track-satellites-button:disabled {
-  background: #2c2c54;
-  color: #999;
-  border: 1px solid #444;
-  cursor: not-allowed;
-  box-shadow: none;
+/* Scrollbars for info and news */
+.satellite-info-section::-webkit-scrollbar,
+.news-section::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.clock {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-family: 'Orbitron', sans-serif;
-  color: #00f5d4;
-  font-size: 1rem;
-  font-weight: bold;
-  border: 1px solid #00f5d4;
-  box-shadow: 0 0 10px rgba(0, 245, 212, 0.3);
-  transition: all 0.3s ease;
-  margin: 0 10px;
-  cursor: default;
+.satellite-info-section::-webkit-scrollbar-thumb,
+.news-section::-webkit-scrollbar-thumb {
+  background-color: #0099ffaa;
+  border-radius: 4px;
 }
 
-.clock:hover {
-  background: rgba(0, 245, 212, 0.1);
-  color: #ffffff;
-  box-shadow: 0 0 12px #00f5d4, 0 0 18px #00f5d4;
-  transform: scale(1.05);
+.satellite-info-section::-webkit-scrollbar-track,
+.news-section::-webkit-scrollbar-track {
+  background: transparent;
 }
