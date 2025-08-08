@@ -1,3 +1,10 @@
+/* Apply box-sizing globally */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* Improved Dashboard Header - Space Themed */
 
 /* Header container */
@@ -34,7 +41,7 @@
     0 0 40px #00fff7cc;
   user-select: none;
   cursor: default;
-  white-space: nowrap;
+  white-space: nowrap; /* optional: keep or remove depending on UI */
 }
 
 /* Satellite Icon next to title */
@@ -161,27 +168,27 @@
     gap: 14px;
     padding: 16px 20px;
   }
-  
+
   .header-title {
     font-size: 22px;
     gap: 10px;
   }
-  
+
   .satellite-icon {
     font-size: 30px;
   }
-  
+
   .header-controls {
     gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .header-controls button {
     padding: 6px 14px;
     font-size: 14px;
   }
-  
+
   .clock {
     font-size: 18px;
     padding: 0 10px;
@@ -233,30 +240,46 @@
   color: #00d9ff;
 }
 
-/* Track button */
+/* Track button consistent with header buttons */
 .track-satellites-button {
-  background-color: #00f5d4;
-  color: #001f28;
+  background: linear-gradient(145deg, #0a192f, #001f3f);
+  border: 2px solid #00f5d4;
+  color: #00f5d4;
   font-weight: 700;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 15px;
+  border-radius: 12px;
+  padding: 12px 20px;
   cursor: pointer;
-  box-shadow: 0 0 10px #00f5d4;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  box-shadow:
+    0 0 8px #00f5d4,
+    0 0 15px #00f5d4,
+    inset 0 0 8px #00f5d4;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.4s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: 'Orbitron', monospace;
+  user-select: none;
+  text-align: center;
 }
 
 .track-satellites-button:disabled {
-  background-color: #00494d;
-  color: #003033;
-  cursor: not-allowed;
+  background: #002031;
+  color: #004a5f;
+  border-color: #004a5f;
   box-shadow: none;
+  cursor: not-allowed;
 }
 
 .track-satellites-button:hover:not(:disabled) {
-  background-color: #00fff7;
-  color: #000a0c;
-  box-shadow: 0 0 18px #00fff7;
+  color: #00fff7;
+  background: linear-gradient(145deg, #001822, #00334d);
+  box-shadow:
+    0 0 12px #00f5d4,
+    0 0 25px #00fff7,
+    inset 0 0 12px #00f5d4;
+  animation: glowPulse 2.5s infinite alternate;
 }
 
 /* Error message */
@@ -439,3 +462,13 @@
 .news-section::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* Optional: Scrollbar styles for Firefox
+@-moz-document url-prefix() {
+  .satellite-info-section,
+  .news-section {
+    scrollbar-width: thin;
+    scrollbar-color: #0099ffaa transparent;
+  }
+}
+*/
