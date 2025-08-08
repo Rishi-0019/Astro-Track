@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Globe from 'react-globe.gl';
-import Select from 'react-select';
+import Select, { MultiValue, ActionMeta } from 'react-select';
 import {
   FaSun,
   FaMoon,
@@ -57,29 +57,57 @@ const Dashboard: React.FC = () => {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [news, setNews] = useState<News[]>([]);
   const globeEl = useRef<any>(null);
+  const [globeSize, setGlobeSize] = useState({ width: window.innerWidth * 0.7, height: window.innerHeight * 0.6 });
 
   useEffect(() => {
+    let isMounted = true;
+
+    const getSatellites = async () => {
+      try {
+        setLoading(prev => ({ ...prev, satellites: true }));
+        const data = await fetchSatellites(28.6139, 77.2090, 0.1);
+        if (isMounted) setSatellites(data.above || []);
+      } catch (err) {
+        if (isMounted) setError('Failed to fetch satellites.');
+      } finally {
+        if (isMounted) setLoading(prev => ({ ...prev, satellites: false }));
+      }
+    };
+
+    const getSpaceNews = async () => {
+      try {
+        const res = await fetch('https://api.spaceflightnewsapi.net/api/v1/articles');
+        const data = await res.json();
+        if (isMounted) setNews(data || []);
+      } catch (err) {
+        console.error('News fetch failed', err);
+      }
+    };
+
     getSatellites();
     getSpaceNews();
-    const clock = setInterval(() => setCurrentTime(new Date().toLocaleTimeString()), 1000);
-    return () => clearInterval(clock);
-    // eslint-disable-next-line
+
+    const clock = setInterval(() => {
+      if (isMounted) setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    const handleResize = () => {
+      if (isMounted) {
+        setGlobeSize({ width: window.innerWidth * 0.7, height: window.innerHeight * 0.6 });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      isMounted = false;
+      clearInterval(clock);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
-  const getSatellites = async () => {
-    try {
-      setLoading(prev => ({ ...prev, satellites: true }));
-      const data = await fetchSatellites(28.6139, 77.2090, 0.1);
-      setSatellites(data.above || []);
-    } catch (err) {
-      setError('Failed to fetch satellites.');
-    } finally {
-      setLoading(prev => ({ ...prev, satellites: false }));
-    }
-  };
-
   const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371;
+    const R = 6371; // km
     const toRad = (deg: number) => deg * (Math.PI / 180);
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
@@ -101,45 +129,59 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const getSatellitePositions = async () => {
+  const getSatellitePositions = useCallback(async () => {
     setLoading(prev => ({ ...prev, position: true }));
     const now = Date.now();
-    const positions: TrackedSatellite[] = [];
 
-    for (const sat of selectedSatellites) {
-      const data = await fetchSatellitePosition(sat.satid);
-      const pos = data.positions?.[0];
-      if (!pos) continue;
-      const last = satellitePositions.find(s => s.satid === sat.satid);
-      const locationName = await getLocationName(pos.satlatitude, pos.satlongitude);
+    try {
+      const positionsPromises = selectedSatellites.map(async (sat) => {
+        try {
+          const data = await fetchSatellitePosition(sat.satid);
+          const pos = data.positions?.[0];
+          if (!pos) return null;
+          const last = satellitePositions.find(s => s.satid === sat.satid);
+          const locationName = await getLocationName(pos.satlatitude, pos.satlongitude);
 
-      const speed =
-        last?.lastTimestamp && now - last.lastTimestamp > 0
-          ? haversineDistance(last.latitude, last.longitude, pos.satlatitude, pos.satlongitude) /
-            ((now - last.lastTimestamp) / 3600000)
-          : 0;
+          const speed =
+            last?.lastTimestamp && now - last.lastTimestamp > 0
+              ? haversineDistance(last.latitude, last.longitude, pos.satlatitude, pos.satlongitude) /
+                ((now - last.lastTimestamp) / 3600000)
+              : 0;
 
-      positions.push({
-        satid: sat.satid,
-        name: sat.satname,
-        latitude: pos.satlatitude,
-        longitude: pos.satlongitude,
-        altitude: pos.sataltitude,
-        locationName,
-        speed,
-        purpose: 'Weather Monitoring',
-        lastLat: pos.satlatitude,
-        lastLng: pos.satlongitude,
-        lastTimestamp: now,
+          return {
+            satid: sat.satid,
+            name: sat.satname,
+            latitude: pos.satlatitude,
+            longitude: pos.satlongitude,
+            altitude: pos.sataltitude,
+            locationName,
+            speed,
+            purpose: 'Weather Monitoring',
+            lastLat: pos.satlatitude,
+            lastLng: pos.satlongitude,
+            lastTimestamp: now,
+          } as TrackedSatellite;
+        } catch (error) {
+          console.error(`Failed to fetch position for satellite ${sat.satid}`, error);
+          return null;
+        }
       });
+
+      const resolvedPositions = (await Promise.all(positionsPromises)).filter(
+        (pos): pos is TrackedSatellite => pos !== null
+      );
+
+      setSatellitePositions(resolvedPositions);
+    } finally {
+      setLoading(prev => ({ ...prev, position: false }));
     }
+  }, [selectedSatellites, satellitePositions]);
 
-    setSatellitePositions(positions);
-    setLoading(prev => ({ ...prev, position: false }));
-  };
-
-  const handleSatelliteChange = (options: any) => {
-    const selected = options ? options.map((o: any) => ({ satid: o.value, satname: o.label })) : [];
+  const handleSatelliteChange = (
+    options: MultiValue<{ value: number; label: string }>,
+    _actionMeta: ActionMeta<{ value: number; label: string }>
+  ) => {
+    const selected = options ? options.map(o => ({ satid: o.value, satname: o.label })) : [];
     setSelectedSatellites(selected.slice(0, 5));
   };
 
@@ -154,16 +196,6 @@ const Dashboard: React.FC = () => {
   const handleLogout = async () => {
     await signOut(auth);
     navigate('/login');
-  };
-
-  const getSpaceNews = async () => {
-    try {
-      const res = await fetch('https://api.spaceflightnewsapi.net/api/v1/articles');
-      const data = await res.json();
-      setNews(data || []);
-    } catch (err) {
-      console.error('News fetch failed', err);
-    }
   };
 
   const getMapImage = () =>
@@ -181,7 +213,6 @@ const Dashboard: React.FC = () => {
 
       <header className="dashboard-header glass">
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          {/* Twinkling cosmic glitter */}
           <div className="header-stars" />
           <span className="header-title">
             <span style={{ letterSpacing: 4 }}>AstroTrack</span>
@@ -267,8 +298,8 @@ const Dashboard: React.FC = () => {
                 altitude: sat.altitude,
                 name: sat.name,
               }))}
-              width={window.innerWidth * 0.7}
-              height={window.innerHeight * 0.6}
+              width={globeSize.width}
+              height={globeSize.height}
             />
           </div>
 
