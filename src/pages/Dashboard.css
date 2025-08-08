@@ -50,15 +50,22 @@ body {
   animation: headerGlow 2.5s linear infinite alternate;
   transition: box-shadow 0.4s cubic-bezier(.4,2,.5,.8);
 }
+
 @keyframes headerGlow {
-  0%   { box-shadow: 0 6px 32px 0 rgba(44,180,229,0.12), 0 0px 12px 0 #4c00f5; }
-  100% { box-shadow: 0 12px 40px 0 rgba(0, 245, 212, 0.20), 0 2.5px 15px 0 #3c5dff; }
+  0% {
+    box-shadow: 0 6px 32px 0 rgba(44,180,229,0.12), 0 0px 12px 0 #4c00f5;
+  }
+  100% {
+    box-shadow: 0 12px 40px 0 rgba(0, 245, 212, 0.20), 0 2.5px 15px 0 #3c5dff;
+  }
 }
 
 /* Twinkling cosmic header glitter */
 .header-stars {
   position: absolute;
-  left: 0; right: 0; top: -26px;
+  left: 0;
+  right: 0;
+  top: -26px;
   width: 100%;
   height: 32px;
   pointer-events: none;
@@ -73,9 +80,14 @@ body {
   animation: starsMove 6s linear infinite;
   opacity: 0.38;
 }
+
 @keyframes starsMove {
-  from { background-position-x: 0; }
-  to { background-position-x: 320px; }
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: 320px;
+  }
 }
 
 .header-title {
@@ -103,7 +115,7 @@ body {
   align-items: center;
 }
 
-/* --------- Header Buttons with Neon Pulse & Animations ----------- */
+/* Animated neon buttons */
 .header-controls button {
   background: linear-gradient(135deg, rgba(58,117,224,0.25) 0%, rgba(0,245,212,0.15) 100%);
   border: 2.5px solid #00f5d4;
@@ -118,8 +130,6 @@ body {
   position: relative;
   outline: none;
   user-select: none;
-
-  /* Neon pulse animation (slow) */
   animation: neonPulse 4.5s ease-in-out infinite alternate;
 }
 
@@ -132,7 +142,6 @@ body {
   }
 }
 
-/* Hover: bright glow, scale up, subtle rotation */
 .header-controls button:hover {
   background: linear-gradient(135deg, #0ff6f9 30%, #7e50b8 100%);
   border-color: #7e50b8;
@@ -142,10 +151,9 @@ body {
     0 0 35px #7e50b8,
     0 0 60px #a391f6;
   transform: scale(1.1) rotate(-2deg);
-  animation-play-state: paused; /* pause the idle pulse */
+  animation-play-state: paused;
 }
 
-/* Active press: quick shrink with glow inversion */
 .header-controls button:active {
   transform: scale(0.93) rotate(1deg);
   box-shadow:
@@ -154,13 +162,12 @@ body {
   transition-duration: 0.12s;
 }
 
-/* Focus outline for accessibility */
 .header-controls button:focus-visible {
   outline: 3px solid #00f5d4cc;
   outline-offset: 4px;
 }
 
-/* Logout button distinct style */
+/* Logout button with red neon animation */
 .header-controls .logout-button {
   border-color: #d70071;
   background: rgba(215, 0, 113, 0.09);
@@ -177,7 +184,6 @@ body {
   }
 }
 
-/* Logout button hover: red-magenta glow */
 .header-controls .logout-button:hover {
   background: linear-gradient(90deg, #d70071 0%, #ff3a7b 100%);
   box-shadow:
@@ -190,7 +196,6 @@ body {
   animation-play-state: paused;
 }
 
-/* Logout button active press */
 .header-controls .logout-button:active {
   transform: scale(0.9) rotate(-1deg);
   box-shadow:
@@ -199,7 +204,7 @@ body {
   transition-duration: 0.1s;
 }
 
-/* ---------------- End Header Buttons Animations ------------------ */
+/* ------- END HEADER EFFECTS ------- */
 
 /* --- Continue with your existing styles --- */
 
