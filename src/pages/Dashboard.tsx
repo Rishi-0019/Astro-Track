@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Globe from 'react-globe.gl';
-import Select, { MultiValue, ActionMeta } from 'react-select';
+import Select from 'react-select';
 import {
   FaSun,
   FaMoon,
@@ -56,72 +56,40 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [news, setNews] = useState<News[]>([]);
+
   const globeEl = useRef<any>(null);
-  const [globeSize, setGlobeSize] = useState({ width: window.innerWidth * 0.7, height: window.innerHeight * 0.6 });
 
   useEffect(() => {
-    let isMounted = true;
-
-    const getSatellites = async () => {
-      try {
-        setLoading(prev => ({ ...prev, satellites: true }));
-        const data = await fetchSatellites(28.6139, 77.2090, 0.1);
-        if (isMounted) setSatellites(data.above || []);
-      } catch (err) {
-        if (isMounted) setError('Failed to fetch satellites.');
-      } finally {
-        if (isMounted) setLoading(prev => ({ ...prev, satellites: false }));
-      }
-    };
-
-    const getSpaceNews = async () => {
-      try {
-        const res = await fetch('https://api.spaceflightnewsapi.net/api/v1/articles');
-        const data = await res.json();
-        if (isMounted) setNews(data || []);
-      } catch (err) {
-        console.error('News fetch failed', err);
-      }
-    };
-
     getSatellites();
     getSpaceNews();
-
-    const clock = setInterval(() => {
-      if (isMounted) setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
-
-    const handleResize = () => {
-      if (isMounted) {
-        setGlobeSize({ width: window.innerWidth * 0.7, height: window.innerHeight * 0.6 });
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      isMounted = false;
-      clearInterval(clock);
-      window.removeEventListener('resize', handleResize);
-    };
+    const clock = setInterval(() => setCurrentTime(new Date().toLocaleTimeString()), 1000);
+    return () => clearInterval(clock);
   }, []);
 
+  const getSatellites = async () => {
+    try {
+      setLoading(prev => ({ ...prev, satellites: true }));
+      const data = await fetchSatellites(28.6139, 77.2090, 0.1);
+      setSatellites(data.above || []);
+    } catch (err) {
+      setError('Failed to fetch satellites.');
+    } finally {
+      setLoading(prev => ({ ...prev, satellites: false }));
+    }
+  };
+
   const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-    const R = 6371; // km
+    const R = 6371;
     const toRad = (deg: number) => deg * (Math.PI / 180);
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   };
 
   const getLocationName = async (lat: number, lng: number): Promise<string> => {
     try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
-      );
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
       const data = await res.json();
       return data.display_name || 'Unknown';
     } catch {
@@ -129,59 +97,43 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const getSatellitePositions = useCallback(async () => {
+  const getSatellitePositions = async () => {
     setLoading(prev => ({ ...prev, position: true }));
     const now = Date.now();
+    const positions: TrackedSatellite[] = [];
 
-    try {
-      const positionsPromises = selectedSatellites.map(async (sat) => {
-        try {
-          const data = await fetchSatellitePosition(sat.satid);
-          const pos = data.positions?.[0];
-          if (!pos) return null;
-          const last = satellitePositions.find(s => s.satid === sat.satid);
-          const locationName = await getLocationName(pos.satlatitude, pos.satlongitude);
+    for (const sat of selectedSatellites) {
+      const data = await fetchSatellitePosition(sat.satid);
+      const pos = data.positions?.[0];
+      if (!pos) continue;
 
-          const speed =
-            last?.lastTimestamp && now - last.lastTimestamp > 0
-              ? haversineDistance(last.latitude, last.longitude, pos.satlatitude, pos.satlongitude) /
-                ((now - last.lastTimestamp) / 3600000)
-              : 0;
+      const last = satellitePositions.find(s => s.satid === sat.satid);
+      const locationName = await getLocationName(pos.satlatitude, pos.satlongitude);
+      const speed = last?.lastTimestamp && now - last.lastTimestamp > 0
+        ? haversineDistance(last.latitude, last.longitude, pos.satlatitude, pos.satlongitude) / ((now - last.lastTimestamp) / 3600000)
+        : 0;
 
-          return {
-            satid: sat.satid,
-            name: sat.satname,
-            latitude: pos.satlatitude,
-            longitude: pos.satlongitude,
-            altitude: pos.sataltitude,
-            locationName,
-            speed,
-            purpose: 'Weather Monitoring',
-            lastLat: pos.satlatitude,
-            lastLng: pos.satlongitude,
-            lastTimestamp: now,
-          } as TrackedSatellite;
-        } catch (error) {
-          console.error(`Failed to fetch position for satellite ${sat.satid}`, error);
-          return null;
-        }
+      positions.push({
+        satid: sat.satid,
+        name: sat.satname,
+        latitude: pos.satlatitude,
+        longitude: pos.satlongitude,
+        altitude: pos.sataltitude,
+        locationName,
+        speed,
+        purpose: 'Weather Monitoring',
+        lastLat: pos.satlatitude,
+        lastLng: pos.satlongitude,
+        lastTimestamp: now
       });
-
-      const resolvedPositions = (await Promise.all(positionsPromises)).filter(
-        (pos): pos is TrackedSatellite => pos !== null
-      );
-
-      setSatellitePositions(resolvedPositions);
-    } finally {
-      setLoading(prev => ({ ...prev, position: false }));
     }
-  }, [selectedSatellites, satellitePositions]);
 
-  const handleSatelliteChange = (
-    options: MultiValue<{ value: number; label: string }>,
-    _actionMeta: ActionMeta<{ value: number; label: string }>
-  ) => {
-    const selected = options ? options.map(o => ({ satid: o.value, satname: o.label })) : [];
+    setSatellitePositions(positions);
+    setLoading(prev => ({ ...prev, position: false }));
+  };
+
+  const handleSatelliteChange = (options: any) => {
+    const selected = options ? options.map((o: any) => ({ satid: o.value, satname: o.label })) : [];
     setSelectedSatellites(selected.slice(0, 5));
   };
 
@@ -198,6 +150,16 @@ const Dashboard: React.FC = () => {
     navigate('/login');
   };
 
+  const getSpaceNews = async () => {
+    try {
+      const res = await fetch('https://api.spaceflightnewsapi.net/api/v1/articles');
+      const data = await res.json();
+      setNews(data || []);
+    } catch (err) {
+      console.error('News fetch failed', err);
+    }
+  };
+
   const getMapImage = () =>
     ({
       day: '//unpkg.com/three-globe/example/img/earth-day.jpg',
@@ -212,18 +174,11 @@ const Dashboard: React.FC = () => {
       <GalaxyFX />
 
       <header className="dashboard-header glass">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <div className="header-stars" />
-          <span className="header-title">
-            <span style={{ letterSpacing: 4 }}>AstroTrack</span>
-            <FaSatellite
-              style={{ marginLeft: 14, fontSize: 32, color: '#4f8cff', filter: 'drop-shadow(0 0 10px #00f5d4)' }}
-            />
-          </span>
-        </div>
+        <h1>
+          AstroTrack <FaSatellite />
+        </h1>
         <div className="header-controls">
           <button
-            title="Toggle Map Style"
             onClick={() =>
               setMapStyle(mapStyle === 'night' ? 'day' : mapStyle === 'day' ? 'space' : 'night')
             }
@@ -232,10 +187,10 @@ const Dashboard: React.FC = () => {
           </button>
           <span className="clock">{currentTime}</span>
           <button onClick={() => navigate('/profile')}>
-            <FaUserCircle style={{ marginRight: 6 }} /> Profile
+            <FaUserCircle /> Profile
           </button>
           <button className="logout-button" onClick={handleLogout}>
-            <FaSignOutAlt style={{ marginRight: 6 }} /> Logout
+            <FaSignOutAlt /> Logout
           </button>
         </div>
       </header>
@@ -251,14 +206,13 @@ const Dashboard: React.FC = () => {
           />
           <HCaptcha sitekey="04086578-873e-4f9e-85b0-a7fcbdb2c996" onVerify={setCaptchaToken} />
           <button
-            className="track-satellites-button"
             disabled={loading.position || !selectedSatellites.length || !captchaToken}
             onClick={handleTrackSatellites}
           >
             {loading.position ? 'Tracking...' : 'Track Satellites'}
           </button>
           {error && (
-            <p className="error-message">
+            <p className="error">
               <FaExclamationTriangle /> {error}
             </p>
           )}
@@ -298,12 +252,12 @@ const Dashboard: React.FC = () => {
                 altitude: sat.altitude,
                 name: sat.name,
               }))}
-              width={globeSize.width}
-              height={globeSize.height}
+              width={window.innerWidth * 0.7}
+              height={window.innerHeight * 0.6}
             />
           </div>
 
-          <div className="news-section glass news-feed">
+          <div className="news-section glass">
             <h3>Latest Space News</h3>
             <div className="news-list">
               {news.map((n, idx) => (
